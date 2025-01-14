@@ -15,21 +15,20 @@ import static org.hamcrest.Matchers.equalTo;
 
 public class ChangeUserTest {
 
+    private final static String UPDATE_EMAIL = UserGenerator.generateUserEmail();
+    private final static String UPDATE_NAME = UserGenerator.generateUserName();
     BaseURL baseURL = new BaseURL();
     UserStep userStep = new UserStep();
-    private String accessToken;
     User user = new User(
             UserGenerator.generateUserEmail(),
             UserGenerator.generateUserName(),
             UserGenerator.generateUserPassword());
-
-    private final static String UPDATE_EMAIL = UserGenerator.generateUserEmail();
-    private final static String UPDATE_NAME = UserGenerator.generateUserName();
+    private String accessToken;
 
     @Before
     public void setUp() {
         baseURL.setUp();
-        userStep.creatingUser(user);
+        UserStep.creatingUser(user);
         accessToken = userStep.loginUser(user).then().extract().path("accessToken");
     }
 
@@ -50,7 +49,8 @@ public class ChangeUserTest {
                 .assertThat()
                 .statusCode(SC_OK)
                 .and()
-                .body("success", equalTo(true));
+                .body("success", equalTo(true))
+                .body("user.email", equalTo(user.getEmail()));
     }
 
     @Test
@@ -78,7 +78,8 @@ public class ChangeUserTest {
                 .assertThat()
                 .statusCode(SC_OK)
                 .and()
-                .body("success", equalTo(true));
+                .body("success", equalTo(true))
+                .body("user.name", equalTo(user.getName()));
     }
 
     @Test
@@ -102,9 +103,9 @@ public class ChangeUserTest {
     public void changeAuthUserWithExistEmailTest() {
         String usedEmail = user.getEmail();
         User anotherUser = new User(
-            UserGenerator.generateUserEmail(),
-            UserGenerator.generateUserName(),
-            UserGenerator.generateUserPassword());
+                UserGenerator.generateUserEmail(),
+                UserGenerator.generateUserName(),
+                UserGenerator.generateUserPassword());
         String newName = anotherUser.getName();
         String newPassword = anotherUser.getPassword();
         String newAccessToken = UserStep.creatingUser(anotherUser).jsonPath().getString("accessToken");

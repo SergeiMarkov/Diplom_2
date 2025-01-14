@@ -10,17 +10,17 @@ public class OrderStep {
     private static final String ORDER_PATH = "api/orders";
 
     @Step("Создание заказа авторизованным пользователем")
-    public Response createOrderAuthUser(Order order, String accessToken){
+    public Response createOrderAuthUser(Order order, String accessToken) {
         return given().log().all()
                 .header("Content-type", "application/json")
-                .header("Authorization",accessToken)
+                .header("Authorization", accessToken)
                 .body(order)
                 .when()
                 .post(ORDER_PATH);
     }
 
     @Step("Создание заказа неавторизованным пользователем")
-    public Response createOrderNotAuthUser(Order order){
+    public Response createOrderNotAuthUser(Order order) {
         return given().log().all()
                 .header("Content-type", "application/json")
                 .body(order)
@@ -29,15 +29,15 @@ public class OrderStep {
     }
 
     @Step("Получение заказов авторизованного пользователя")
-    public Response getOrdersAuthUser(String accessToken){
+    public Response getOrdersAuthUser(String accessToken) {
         return given().log().all()
                 .header("Content-type", "application/json")
-                .header("Authorization",accessToken)
+                .header("Authorization", accessToken)
                 .get(ORDER_PATH);
     }
 
     @Step("Получение заказов неавторизованного пользователя")
-    public Response getOrdersNotAuthUser(){
+    public Response getOrdersNotAuthUser() {
         return given()
                 .header("Content-type", "application/json")
                 .get(ORDER_PATH);

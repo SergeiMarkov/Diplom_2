@@ -19,32 +19,33 @@ import java.util.List;
 
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class GetOrderTest {
 
     BaseURL baseURL = new BaseURL();
     UserStep userStep = new UserStep();
     OrderStep orderStep = new OrderStep();
-    private String accessToken;
-    private Ingredient ingredientList;
-    private List<String> ingredients;
-    private Order order;
     IngredientStep ingredientStep = new IngredientStep();
     User user = new User(
             UserGenerator.generateUserEmail(),
             UserGenerator.generateUserName(),
             UserGenerator.generateUserPassword());
+    private String accessToken;
+    private Ingredient ingredientList;
+    private List<String> ingredients;
+    private Order order;
 
     @Before
     public void setUp() {
         baseURL.setUp();
         ingredientList = ingredientStep.getIngredient();
         ingredients = new ArrayList<>();
-        ingredients.add(ingredientList.getData().get(1).get_id());
-        ingredients.add(ingredientList.getData().get(2).get_id());
-        ingredients.add(ingredientList.getData().get(3).get_id());
-        userStep.creatingUser(user);
+        ingredients.add(ingredientList.getData().get(1).getId());
+        ingredients.add(ingredientList.getData().get(2).getId());
+        ingredients.add(ingredientList.getData().get(3).getId());
+        UserStep.creatingUser(user);
         accessToken = userStep.loginUser(user).then().extract().path("accessToken");
         order = new Order(ingredients);
     }

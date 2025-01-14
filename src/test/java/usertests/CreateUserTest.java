@@ -9,20 +9,21 @@ import url.BaseURL;
 import user.User;
 import user.UserGenerator;
 import user.UserStep;
-import static org.hamcrest.Matchers.equalTo;
+
 import static org.apache.http.HttpStatus.SC_FORBIDDEN;
 import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.Matchers.equalTo;
 
 
 public class CreateUserTest {
 
     BaseURL baseURL = new BaseURL();
     UserStep userStep = new UserStep();
-    private String accessToken;
     User user = new User(
             UserGenerator.generateUserEmail(),
             UserGenerator.generateUserName(),
             UserGenerator.generateUserPassword());
+    private String accessToken;
 
     @Before
     public void setUp() {
@@ -41,20 +42,22 @@ public class CreateUserTest {
     @DisplayName("Успешное создание пользователя")
     @Description("Позитивная проверка создания пользователя, возвращение корректного статуса и тела ответа")
     public void creatingUserTest() {
-        userStep.creatingUser(user)
+        UserStep.creatingUser(user)
                 .then().log().all()
                 .assertThat()
                 .statusCode(SC_OK)
                 .and()
-                .body("success", equalTo(true));
+                .body("success", equalTo(true))
+                .body("user.email", equalTo(user.getEmail()))
+                .body("user.name", equalTo(user.getName()));
     }
 
     @Test
     @DisplayName("Не возможно создать пользователя дважды")
     @Description("Негативная проверка создания второго иденитичного пользователя, возвращение корректного статуса и тела ответа")
     public void creatingAUserTwiceTest() {
-        userStep.creatingUser(user);
-        userStep.creatingUser(user)
+        UserStep.creatingUser(user);
+        UserStep.creatingUser(user)
                 .then().log().all()
                 .assertThat()
                 .statusCode(SC_FORBIDDEN)
@@ -68,7 +71,7 @@ public class CreateUserTest {
     @Description("Негативная проверка создания пользователя с пустым паролем, возвращение корректного статуса и тела ответа")
     public void creatingAUserWithoutAPasswordTest() {
         user.setPassword("");
-        userStep.creatingUser(user)
+        UserStep.creatingUser(user)
                 .then().log().all()
                 .assertThat()
                 .statusCode(SC_FORBIDDEN)
@@ -82,7 +85,7 @@ public class CreateUserTest {
     @Description("Негативная проверка создания пользователя с пустым email, возвращение корректного статуса и тела ответа")
     public void creatingAUserWithoutAEmailTest() {
         user.setEmail("");
-        userStep.creatingUser(user)
+        UserStep.creatingUser(user)
                 .then().log().all()
                 .assertThat()
                 .statusCode(SC_FORBIDDEN)
@@ -96,7 +99,7 @@ public class CreateUserTest {
     @Description("Негативная проверка создания пользователя с пустым name, возвращение корректного статуса и тела ответа")
     public void creatingAnUnnamedUserTest() {
         user.setName("");
-        userStep.creatingUser(user)
+        UserStep.creatingUser(user)
                 .then().log().all()
                 .assertThat()
                 .statusCode(SC_FORBIDDEN)

@@ -1,9 +1,9 @@
 package ingredients;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
 
 @Getter
 @Setter
@@ -11,7 +11,10 @@ import lombok.Setter;
 
 public class Data {
 
-    private String _id;
+    //Без аннотации id = null
+    @SerializedName("_id")
+    private String id;
+
     private String name;
     private String type;
     private int proteins;
@@ -22,5 +25,7 @@ public class Data {
     private String image;
     private String image_mobile;
     private String image_large;
-    private int __v;
+    private int underliningV;
 }
+
+

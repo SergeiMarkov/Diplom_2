@@ -6,10 +6,9 @@ import lombok.Setter;
 import java.util.List;
 
 
-@Setter
 @Getter
+@Setter
 public class Ingredient {
     private boolean success;
     private List<Data> data;
-
 }
